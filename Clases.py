@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from twocaptcha import TwoCaptcha
 
-lista_patentes=['PHSS63']
+lista_patentes=['KXPS43']
 class Functions():
     def Solver(self,img,text):
         urllib.request.urlretrieve(img, f'captcha{text}.png')
@@ -33,6 +33,7 @@ def getDriverNororiente(name_path: str = 'chromedriver.exe', options: None = Non
 class Vehiculo:
     def __init__ (self, patente):
         self.__patente = patente
+        self.__registro_transporte_publico = []
         self.__infracciones_vespucio_norte = []
         self.__infracciones_vespucio_sur = []
         self.__infracciones_autopase = []
@@ -47,6 +48,36 @@ class Vehiculo:
 
     def getPatente(self):
         return self.__patente
+
+    def getRegistroTransportePublico(self):
+
+        print('\nREGISTRO NACIONAL DE TRANSPORTE PÚBLICO Y ESCOLAR\n')
+
+        registro = self.__registro_transporte_publico
+
+        if(self.__registro_transporte_publico==[]):
+            print('El vehículo de patente ', self.__patente, ' no pertenece al Registro Nacional de Servicios de Transporte Público de Pasajeros ni al Registro Nacional de Servicios de Transporte Remunerado de Escolares\n')
+        else:
+            print('Placa Patente:', registro[0])
+            print('Fecha de Entrada RNT:',registro[1])
+            print('Tipo de Servicio:',registro[2])
+            print('Capacidad:',registro[3])
+            print('Estado de Vehiculo:' ,registro[4])
+            print('Region:',registro[5])
+            print('Año de fabricacion: ',registro[6])
+            print('Cinturon de seguridad obligatorio: ',registro[7])
+            print('Antigüedad del Vehiculo: ',registro[8])
+            print('Marca:',registro[9])
+            print('Modelo:',registro[10])
+            print('Folio Servicio:',registro[11])
+            print('Flota Asociada al Servicio:',registro[12])
+            print('Nombre del Responsable del Servicio:',registro[13])
+            print('Estado del Servicio:',registro[14])
+
+        return self.__registro_transporte_publico
+
+    def setRegistroTransportePublico(self, registroTransportePublico):
+        self.__registro_transporte_publico = registroTransportePublico
 
     def getInfraccionesVespucioNorte(self):
 
@@ -283,20 +314,95 @@ class TransportePublico:
 
         data = {
         '__VIEWSTATE': '/wEPDwUKMTc0MTY3NTE3MQ9kFgJmD2QWAgIDD2QWAgIBD2QWAgIBD2QWAgIBD2QWAgIFDw8WBB4EVGV4dAWFAjxpbWcgc3JjPSdodHRwOi8vYXBwcy5tdHQuY2wvd3d3L2ltZ3MvcGxhY2FfbHVwYS5wbmcnIC8+PGJyIC8+PHN0cm9uZz5FbCB2ZWjDrWN1bG8gZW4gY29uc3VsdGEgbm8gcGVydGVuZWNlIGFsIFJlZ2lzdHJvIE5hY2lvbmFsIGRlIFNlcnZpY2lvcyBkZSBUcmFuc3BvcnRlIFDDumJsaWNvIGRlIFBhc2FqZXJvcyBuaSBhbCBSZWdpc3RybyBOYWNpb25hbCBkZSBTZXJ2aWNpb3MgZGUgVHJhbnNwb3J0ZSBSZW11bmVyYWRvIGRlIEVzY29sYXJlczwvc3Ryb25nPh4HVmlzaWJsZWdkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUgY3RsMDAkTWFpbkNvbnRlbnQkaW1nQnRuQ29uc3VsdGHi2oH8N/l6WPK18/lBTVqKUyDl6cjAz/FPHWG90t6r+g==',
-        '__VIEWSTATEGENERATOR': self.__patenteVehiculo,
+        '__VIEWSTATEGENERATOR': '522DF3F1',
         '__EVENTTARGET': '',
         '__EVENTARGUMENT': '',
         '__EVENTVALIDATION': '/wEdAASTj8RE1t+b0rmqH5lXzbQHIKnzPnVFgXAZ20CcrnWXzeHx18AZ0epHV1po9+JEZeBnTMb45aJIIeXNdhdxmB5y16hbBVTD9sA1Df7Tv3JDHwkxYnhJbQWRrG6M43r0Y20=',
-        'ctl00$MainContent$ppu': 'KXPS43',
+        'ctl00$MainContent$ppu': self.__patenteVehiculo,
         'ctl00$MainContent$btn_buscar': 'Buscar'
         }
 
-        response = requests.post('http://apps.mtt.cl/consultaweb/', headers=headers, cookies=cookies, data=data, verify=False)
+        try:
+            response = requests.post('http://apps.mtt.cl/consultaweb/', headers=headers, cookies=cookies, data=data, verify=False)
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        table=soup.find_all("table", id='MainContent_tablaDatos')
-        for i in table:
-            print(i.text.replace('\n', ' '))
+            soup = BeautifulSoup(response.text, 'html.parser')
+            table=soup.find_all("table", id='MainContent_tablaDatos')
+            registro_aux = ''
+            for palabra in table:
+
+                try:
+                    registro_aux = registro_aux+palabra.text.replace('\n', ' ')
+                except:
+                    registro_aux = registro_aux+palabra.text
+
+            registro_array = registro_aux.split('   ')
+
+            for i in registro_array:
+                if((i.isupper()==True) or (i=='') or (i=='  ')):
+                    registro_array.remove(i)
+
+            registro_array.remove(registro_array[len(registro_array)-1])
+            registro_array.remove(registro_array[len(registro_array)-1])
+
+            registro_array_final = []
+
+            registro_array_final.append(registro_array[0].split(' ')[2])
+            registro_array_final.append(registro_array[1].split(' ')[4])
+
+            registro_indice_2 = registro_array[2].split(' ')
+            cont_bucle = 0
+            while(cont_bucle<3):
+                registro_indice_2.remove(registro_indice_2[0])
+                cont_bucle+=1
+
+            tipo_transporte = ''
+            for i in registro_indice_2:
+                tipo_transporte = tipo_transporte+' '+i
+            registro_array_final.append(tipo_transporte.strip())
+
+            registro_array_final.append(registro_array[3].split(' ')[1])
+            registro_array_final.append(registro_array[4].split(' ')[3])
+            registro_array_final.append(registro_array[5].split(' ')[1])
+            registro_array_final.append(registro_array[6].split(' ')[3])
+            registro_array_final.append(registro_array[7].split(' ')[4])
+            registro_array_final.append(registro_array[8].split(' ')[3])
+
+            registro_indice_9 = registro_array[9].split(' ')
+            registro_indice_9.remove(registro_indice_9[0])
+
+            marca_transporte = ''
+            for i in registro_indice_9:
+                marca_transporte = marca_transporte+' '+i
+            registro_array_final.append(marca_transporte.strip())
+
+            registro_indice_10 = registro_array[10].split(' ')
+            registro_indice_10.remove(registro_indice_10[0])
+
+            modelo_transporte = ''
+            for i in registro_indice_10:
+                modelo_transporte=modelo_transporte+' '+i
+            registro_array_final.append(modelo_transporte.strip())
+
+            registro_array_final.append(registro_array[11].split(' ')[2])
+            registro_array_final.append(registro_array[12].split(' ')[4])
+
+            registro_indice_13 = registro_array[13].split(' ')
+            cont_bucle = 0
+            while(cont_bucle<5):
+                registro_indice_13.remove(registro_indice_13[0])
+                cont_bucle+=1
+
+            nombre_responsable = ''
+            for i in registro_indice_13:
+                nombre_responsable=nombre_responsable+' '+i
+            registro_array_final.append(nombre_responsable.strip())
+
+            registro_array_final.append(registro_array[14].split(' ')[3])
+
+            return registro_array_final
+        except:
+            return []
+
 
 #ordenar los datos
 class RevisionTecnica:
@@ -1040,7 +1146,10 @@ class ElPacifico:
             lista.append(i.text)
         return lista
 
-auto = Vehiculo('WT8329')
+auto = Vehiculo('PHSS63')
+
+auto.setRegistroTransportePublico(TransportePublico(auto.getPatente()).resultado())
+auto.getRegistroTransportePublico()
 
 #auto.setInfraccionesViasExclusivas(ViasExclusivas(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesViasExclusivas()
@@ -1057,7 +1166,7 @@ auto = Vehiculo('WT8329')
 #auto.setInfraccionesRutaMaipo(RutaMaipo(auto.getPatente()).getInfracciones())
 #print(auto.getInfraccionesRutaMaipo())
 
-#TransportePublico(auto.getPatente()).resultado()
+
 
 # Revision_tecnica1 = RevisionTecnica(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx')
 # datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado = Revision_tecnica1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx')
