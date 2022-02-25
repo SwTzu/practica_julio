@@ -381,6 +381,7 @@ class RevisionTecnica:
 
         return datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado
 
+#no se entiende lo que retorna
 class EncargoRobo:
     def __init__(self, patenteVehiculo, API_KEY, page_url):
         self.__patenteVehiculo = patenteVehiculo
@@ -437,8 +438,6 @@ class EncargoRobo:
                     c.append(z.text)
             #driver.close()
         return a,b,c
-
-    
 
 class VespucioNorte:
     def __init__(self, patenteVehiculo):
@@ -1055,15 +1054,17 @@ auto = Vehiculo('WT8329')
 #auto.setInfraccionesElPacifico(ElPacifico(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesElPacifico()
 
+#auto.setInfraccionesRutaMaipo(RutaMaipo(auto.getPatente()).getInfracciones())
+#print(auto.getInfraccionesRutaMaipo())
+
 #TransportePublico(auto.getPatente()).resultado()
 
 # Revision_tecnica1 = RevisionTecnica(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx')
 # datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado = Revision_tecnica1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx')
 # print(datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado)
 
-#auto.setInfraccionesRutaMaipo(RutaMaipo(auto.getPatente()).getInfracciones())
-#print(auto.getInfraccionesRutaMaipo())
 
-Encargo_Robo1 = EncargoRobo(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
-a,b,c = Encargo_Robo1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
-print(a,b,c)
+# Encargo_Robo1 = EncargoRobo(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
+# a,b,c = Encargo_Robo1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
+# print(a,b,c)
+
