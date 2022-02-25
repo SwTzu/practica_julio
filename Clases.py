@@ -226,6 +226,18 @@ class Vehiculo:
         self.__infracciones_del_sol = infraccionesDelSol
 
     def getInfraccionesRutaMaipo(self):
+
+        if(self.__infracciones_ruta_maipo[0]==[]):
+            print('El vehiculo de patente ', self.__patente, 'no tiene registros de tránsitos de más de 30 días no facturados')
+        else:
+            print('Tiene tránsitos de más de 30 días no facturados')
+
+        if(self.__infracciones_ruta_maipo[1]==[]):
+            print('El vehiculo de patente, ', self.__patente, 'no tiene registros de tránsitos de más de 30 días facturados')
+
+        else:
+            print('Tien trásnsitos de más de 30 días facturados.')
+
         return self.__infracciones_ruta_maipo
 
     def setInfraccionesRutaMaipo(self, infraccionesRutaMaipo):
@@ -243,6 +255,190 @@ class Vehiculo:
 
     def setInfraccionesElPacifico(self, infraccionesElPacifico):
         self.__infracciones_el_pacifico = infraccionesElPacifico
+
+#separar los datos
+class TransportePublico:
+    def __init__(self, patenteVehiculo):
+        self.__patenteVehiculo = patenteVehiculo
+
+    def resultado(self):
+        cookies = {
+            'ASP.NET_SessionId': '0sla4exrmtiuesonv2pvmhqf',
+            '_ga': 'GA1.2.1806332623.1637258376',
+            '_gid': 'GA1.2.1544212551.1637804958',    
+        }
+
+        headers = {
+            'Connection': 'keep-alive',
+            'Cache-Control': 'max-age=0',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+            'Origin': 'http://apps.mtt.cl',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Referer': 'http://apps.mtt.cl/consultaweb/',
+            'Accept-Language': 'es-ES,es;q=0.9',
+            }
+
+
+        data = {
+        '__VIEWSTATE': '/wEPDwUKMTc0MTY3NTE3MQ9kFgJmD2QWAgIDD2QWAgIBD2QWAgIBD2QWAgIBD2QWAgIFDw8WBB4EVGV4dAWFAjxpbWcgc3JjPSdodHRwOi8vYXBwcy5tdHQuY2wvd3d3L2ltZ3MvcGxhY2FfbHVwYS5wbmcnIC8+PGJyIC8+PHN0cm9uZz5FbCB2ZWjDrWN1bG8gZW4gY29uc3VsdGEgbm8gcGVydGVuZWNlIGFsIFJlZ2lzdHJvIE5hY2lvbmFsIGRlIFNlcnZpY2lvcyBkZSBUcmFuc3BvcnRlIFDDumJsaWNvIGRlIFBhc2FqZXJvcyBuaSBhbCBSZWdpc3RybyBOYWNpb25hbCBkZSBTZXJ2aWNpb3MgZGUgVHJhbnNwb3J0ZSBSZW11bmVyYWRvIGRlIEVzY29sYXJlczwvc3Ryb25nPh4HVmlzaWJsZWdkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUgY3RsMDAkTWFpbkNvbnRlbnQkaW1nQnRuQ29uc3VsdGHi2oH8N/l6WPK18/lBTVqKUyDl6cjAz/FPHWG90t6r+g==',
+        '__VIEWSTATEGENERATOR': self.__patenteVehiculo,
+        '__EVENTTARGET': '',
+        '__EVENTARGUMENT': '',
+        '__EVENTVALIDATION': '/wEdAASTj8RE1t+b0rmqH5lXzbQHIKnzPnVFgXAZ20CcrnWXzeHx18AZ0epHV1po9+JEZeBnTMb45aJIIeXNdhdxmB5y16hbBVTD9sA1Df7Tv3JDHwkxYnhJbQWRrG6M43r0Y20=',
+        'ctl00$MainContent$ppu': 'KXPS43',
+        'ctl00$MainContent$btn_buscar': 'Buscar'
+        }
+
+        response = requests.post('http://apps.mtt.cl/consultaweb/', headers=headers, cookies=cookies, data=data, verify=False)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        table=soup.find_all("table", id='MainContent_tablaDatos')
+        for i in table:
+            print(i.text.replace('\n', ' '))
+
+#ordenar los datos
+class RevisionTecnica:
+    def __init__(self, patenteVehiculo, API_KEY, page_url):
+        self.__patenteVehiculo = patenteVehiculo
+        self.API_KEY = API_KEY
+        self.page_url = page_url
+
+    def resultado(self, API_KEY, page_url):
+        #soup = BeautifulSoup(driver.page_source, 'html.parser')
+        #sitekey = str(soup.find('div', class_='g-recaptcha').get('data-sitekey'))
+        sitekey = '6LctMP8SAAAAANBvpGMjkMm5bBJ7TY-7X9UuGAaq'
+        u1 = f"https://2captcha.com/in.php?key={API_KEY}&method=userrecaptcha&googlekey={sitekey}&pageurl={page_url}&json=1"
+        r1 = requests.get(u1)
+        rid = r1.json().get("request")
+        u2 = f"https://2captcha.com/res.php?key={API_KEY}&action=get&id={int(rid)}&json=1"
+        time.sleep(5)
+        while True:
+            r2 = requests.get(u2)
+            if r2.json().get("status") == 1:
+                form_tokon = r2.json().get("request")
+                break
+            time.sleep(5)
+
+        headers = {
+            'Connection': 'keep-alive',
+            'Cache-Control': 'max-age=0',
+            'Upgrade-Insecure-Requests': '1',
+            'Origin': 'http://www.prt.cl',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36 OPR/81.0.4196.61',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Referer': 'http://www.prt.cl/Paginas/RevisionTecnica.aspx',
+            'Accept-Language': 'en-US,en;q=0.9',
+        }
+
+        data = {
+            '__EVENTTARGET': '',
+            '__EVENTARGUMENT': '',
+            '__VIEWSTATE': 'Iq601Ta4fJGLhgkDHTJBOkqcUPBHIqu88qsauJlotK5C8nJnoJv+6DsYXNn9YYkpNoLKf8k7tul7AD420ptaKveliplDcWaOESiUKOT64GthfNBU+GlFjX5GhXW4W0aUKbC2DVO3MnB0lPXjG+WdlUuWtK6NqAJr5+CRbsVaihh3L6OueqVEZkrcFr0ytvgtBi6gATZgmLcNAMVDnFX8epyXQKQtfcxP8jOr6j/4rnUju2iHsuVUAmWBO+QwZpo2sFZkL/cFg/vbjdR6Wr04fQ3hbAaAKNrpgPdY/9T2uB8DD4scFHhRH2IwgMYFgsy9tUANEMLG4sKLcQuX3+3NdBc4YHYFIf7aTur0eQT68C9Z9xocQj2frfsIWXAxXo9g6PTIawOYdkezOf7+rq4yIHIsRQActtxvLax2u/QtYTYIlQ5o26YnaVW7bZjUsoJ/iXIdmENbTkm/94eN8w/kB+JdDrGZRS8mi6gmgfx3RAzOhnFC6gUQu6+z0brWvIXnf03Mcg==',
+            '__VIEWSTATEGENERATOR': '4F717C3B',
+            '__EVENTVALIDATION': 'qxLAMNT9rltV6gVzxoPJtyrO5UOBnCx/6RiNSQl2d9NSqeox2pP+gXMGDu4Vs0V3mKmV+MhiWu7mZ3rLYHwpxyaWEXdTs6GwVbqEeSlIeJ2jmyX2j7IFVeZz+p5VK8mrGnU05qAOlnGuMibqG2Mj71Jw2w7tKb3NkWBu5U9J/O5AMJudnwQ35rmWpc+wp7VPiy0T9bdAFa5zvH4n9HyJNRBtMpLOzt3uUTb/NHNL9QP4DtzTIL/GhOFlavFP4ZFOYZjQ1g==',
+            'ctl00$ContentPlaceHolder1$hddPPU': '',
+            'ctl00$ContentPlaceHolder1$hddPRT': '',
+            'ctl00$ContentPlaceHolder1$hddDIRPRT': '',
+            'ctl00$ContentPlaceHolder1$patenteInput': self.__patenteVehiculo,
+            'ctl00$ContentPlaceHolder1$buscar.x': '36',
+            'ctl00$ContentPlaceHolder1$buscar.y': '23',
+            'g-recaptcha-response': form_tokon,
+            'ctl00$ContentPlaceHolder1$MyAccordion_AccordionExtender_ClientState': '0'
+        }
+
+        response = requests.post('http://www.prt.cl/Paginas/RevisionTecnica.aspx', headers=headers, data=data, verify=False)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        datoVeiculos = []
+        infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado= [],[],[],[],[],[]
+        infoVeiculo = soup.find_all('span', id='ContentPlaceHolder1_lblDatosVehiculo')
+        infoRevision = soup.find_all('span', id='ContentPlaceHolder1_lblHistorico')
+        for i in infoVeiculo:
+            for z in i.find_all('span'):
+                datoVeiculos.append(z.text)
+
+        for i in infoRevision:
+            for z in i.find_all('td')[0::6]:
+                infoRevision_Fecha.append(z.text)
+
+            for z in i.find_all('td')[1::6]:
+                infoRevision_CodPlanta.append(z.text)
+
+            for z in i.find_all('td')[2::6]:
+                infoRevision_Planta.append(z.text)
+
+            for z in i.find_all('td')[3::6]:
+                infoRevision_NroCertificado.append(z.text)
+
+            for z in i.find_all('td')[4::6]:
+                infoRevision_FechaVec.append(z.text)
+
+            for z in i.find_all('td')[5::6]:
+                infoRevision_Estado.append(z.text)
+
+        return datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado
+
+class EncargoRobo:
+    def __init__(self, patenteVehiculo, API_KEY, page_url):
+        self.__patenteVehiculo = patenteVehiculo
+        self.API_KEY = API_KEY
+        self.page_url = page_url
+
+    def Solver(self, driver, API_KEY, page_url):
+        soup = BeautifulSoup(driver.page_source, 'html.parser') 
+        sitekey = str(soup.find('div', class_='g-recaptcha').get('data-sitekey'))
+        #sitekey = '6LctMP8SAAAAANBvpGMjkMm5bBJ7TY-7X9UuGAaq'
+        u1 = f"https://2captcha.com/in.php?key={API_KEY}&method=userrecaptcha&googlekey={sitekey}&pageurl={page_url}&json=1"
+        r1 = requests.get(u1)
+        rid = r1.json().get("request")
+        u2 = f"https://2captcha.com/res.php?key={API_KEY}&action=get&id={int(rid)}&json=1"
+        time.sleep(5)
+        while True:
+            r2 = requests.get(u2)
+            if r2.json().get("status") == 1:
+                form_tokon = r2.json().get("request")
+                break
+            time.sleep(5)
+        wirte_tokon_js = f'document.getElementById("g-recaptcha-response").innerHTML="{form_tokon}";'
+        driver.execute_script(wirte_tokon_js)
+        time.sleep(3)
+
+    def resultado(self, API_KEY, page_url):
+
+        if __name__ == '__main__':
+            driver = webdriver.Chrome()
+            driver.get(page_url)
+            driver.find_element_by_xpath('//*[@id="txt_placa_patente"]').send_keys(self.__patenteVehiculo)
+            self.Solver(driver, API_KEY, page_url)
+            btt=driver.find_element_by_xpath('//*[@id="btn_consultar"]')
+            btt.click()
+            time.sleep(5)
+            print(driver.page_source, file=open("robo.html", "w"))
+            '''
+            with open("robo.html") as fp:
+                soup = BeautifulSoup(fp, 'html.parser')
+            '''
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            #print(soup)
+            content=soup.find_all('div', class_='modal-content')
+            a = [] 
+            b = [] 
+            c = [] 
+            for i in content:
+                for z in i.find_all('label', id='lbl_Vehiculo'):
+                    mensaje=z.text
+                    a.append(z.text)
+                for z in i.find_all('th'):
+                    b.append(z.text)
+                for z in i.find_all('td', align='left'):
+                    c.append(z.text)
+            #driver.close()
+        return a,b,c
+
+    
 
 class VespucioNorte:
     def __init__(self, patenteVehiculo):
@@ -760,25 +956,30 @@ class DelSol:
         print(lista)
         return lista
 
-#simplemente error
+#separar datos
 class RutaMaipo:
     def __init__(self, patenteVehiculo):
         self.__patenteVehiculo = patenteVehiculo
 
     def getInfracciones(self):
-        driver = webdriver.Chrome()
-        driver.get('https://www.rutamaipo.cl/taginterurbano/pasaste-sin-tag')
-        driver.find_element_by_xpath('//*[@id="patente"]').send_keys(self.__patenteVehiculo)
-        driver.find_element_by_xpath('//*[@id="consultar_sintag"]').click()
-        time.sleep(2)
         try:
-            driver.find_element_by_xpath('/html/body/div[1]/main/div[2]/div/div/div/button').click()
-        except:
-            pass 
-        table1=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/form').text
-        table2=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/div[2]').text
+            driver = webdriver.Chrome()
+            driver.get('https://www.rutamaipo.cl/taginterurbano/pasaste-sin-tag')
+            driver.find_element_by_xpath('//*[@id="patente"]').send_keys(self.__patenteVehiculo)
+            driver.find_element_by_xpath('//*[@id="consultar_sintag"]').click()
+            time.sleep(2)
+            try:
+                driver.find_element_by_xpath('/html/body/div[1]/main/div[2]/div/div/div/button').click()
+            except:
+                pass 
+            table1=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/form').text
+            table2=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/div[2]').text
 
-        return table1,table2
+            return [[table1],[table2]]
+
+        except:
+            return [[],[]]
+        
 
 #separar datos
 class LosLibertadores:
@@ -840,7 +1041,7 @@ class ElPacifico:
             lista.append(i.text)
         return lista
 
-auto = Vehiculo('XF7651')
+auto = Vehiculo('WT8329')
 
 #auto.setInfraccionesViasExclusivas(ViasExclusivas(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesViasExclusivas()
@@ -851,7 +1052,18 @@ auto = Vehiculo('XF7651')
 #auto.setInfraccionesDelSol(DelSol(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesDelSol()
 
-auto.setInfraccionesElPacifico(ElPacifico(auto.getPatente()).getInfracciones())
-auto.getInfraccionesElPacifico()
+#auto.setInfraccionesElPacifico(ElPacifico(auto.getPatente()).getInfracciones())
+#auto.getInfraccionesElPacifico()
 
+#TransportePublico(auto.getPatente()).resultado()
 
+# Revision_tecnica1 = RevisionTecnica(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx')
+# datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado = Revision_tecnica1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx')
+# print(datoVeiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado)
+
+#auto.setInfraccionesRutaMaipo(RutaMaipo(auto.getPatente()).getInfracciones())
+#print(auto.getInfraccionesRutaMaipo())
+
+Encargo_Robo1 = EncargoRobo(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
+a,b,c = Encargo_Robo1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
+print(a,b,c)
