@@ -297,16 +297,27 @@ class Vehiculo:
 
     def getInfraccionesRutaMaipo(self):
 
-        if(self.__infracciones_ruta_maipo[0]==[]):
-            print('El vehiculo de patente ', self.__patente, 'no tiene registros de tránsitos de más de 30 días no facturados')
+        infraccionesRutaMaipo = self.__infracciones_ruta_maipo
+        print('\nRuta Maipo\n')
+        print('\nNo facturados\n')
+        if(infraccionesRutaMaipo[0]==[]):
+            print('El vehiculo de patente ', self.__patente, 'no tiene registros de tránsitos de más de 30 días no facturados\n')
         else:
-            print('Tiene tránsitos de más de 30 días no facturados')
+            for i in range(0, len(infraccionesRutaMaipo[0][0])):
+                print('Fecha de transito: ', infraccionesRutaMaipo[0][0][i])
+                print('Cantidad de transitos: ',  infraccionesRutaMaipo[0][1][i])
+                print('Tarifa: ', infraccionesRutaMaipo[0][2][i], '\n')
+            print('\nTotal a pagar: ', infraccionesRutaMaipo[0][3], '\n')
 
-        if(self.__infracciones_ruta_maipo[1]==[]):
-            print('El vehiculo de patente, ', self.__patente, 'no tiene registros de tránsitos de más de 30 días facturados')
+        print('\nFacturados\n')
+        if(infraccionesRutaMaipo[1]==[]):
+            print('El vehiculo de patente, ', self.__patente, 'no tiene registros de tránsitos de más de 30 días facturados\n')
 
         else:
-            print('Tien trásnsitos de más de 30 días facturados.')
+            for i in range(0, len(infraccionesRutaMaipo[1][0])):
+                print('Numero de documento: ', infraccionesRutaMaipo[1][0][i])
+                print('Fecha de emision: ', infraccionesRutaMaipo[1][1][i])
+                print('Total a pagar: ', infraccionesRutaMaipo[1][2][i])
 
         return self.__infracciones_ruta_maipo
 
@@ -1102,29 +1113,75 @@ class DelSol:
         print(lista)
         return lista
 
-#separar datos
+#falta caso donde haya más de uno facturado y más de uno no facturado
 class RutaMaipo:
     def __init__(self, patenteVehiculo):
         self.__patenteVehiculo = patenteVehiculo
 
     def getInfracciones(self):
+        
+        driver = webdriver.Chrome()
+        driver.get('https://www.rutamaipo.cl/taginterurbano/pasaste-sin-tag')
+        driver.find_element_by_xpath('//*[@id="patente"]').send_keys(self.__patenteVehiculo)
+        driver.find_element_by_xpath('//*[@id="consultar_sintag"]').click()
+        time.sleep(2)
         try:
-            driver = webdriver.Chrome()
-            driver.get('https://www.rutamaipo.cl/taginterurbano/pasaste-sin-tag')
-            driver.find_element_by_xpath('//*[@id="patente"]').send_keys(self.__patenteVehiculo)
-            driver.find_element_by_xpath('//*[@id="consultar_sintag"]').click()
-            time.sleep(2)
-            try:
-                driver.find_element_by_xpath('/html/body/div[1]/main/div[2]/div/div/div/button').click()
-            except:
-                pass 
-            table1=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/form').text
-            table2=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/div[2]').text
+            driver.find_element_by_xpath('/html/body/div[1]/main/div[2]/div/div/div/button').click()
+        except:
+            pass
 
-            return [[table1],[table2]]
+        try: 
+            #'HKTW30'
+            table1=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/form').text
+            facturados = table1.split('\n')
+
+            if(facturados[len(facturados)-2]=='$S/I'):
+                facturados = []
+
+            else:
+                total = facturados[len(facturados)-2]
+                cont_bucle = 0
+                while(cont_bucle<5):
+                    facturados.remove(facturados[0])
+                    cont_bucle+=1
+
+                cont_bucle=0
+                while(cont_bucle<5):
+                    facturados.remove(facturados[len(facturados)-1])
+                    cont_bucle+=1
+
+            facturados_final = [[],[],[], total]
+            for i in facturados:
+                facturados_final[0].append(i.split(' ')[0])
+                facturados_final[1].append(i.split(' ')[1])
+                facturados_final[2].append(i.split(' ')[2])
 
         except:
-            return [[],[]]
+            facturados_final=[]
+        
+        try:
+            #WT8329
+            table2=driver.find_element_by_xpath('/html/body/div/main/div[1]/section/div[2]/div/div[2]').text
+            noFacturados = table2.split('\n')
+            noFacturados.remove(noFacturados[len(noFacturados)-1])
+
+            cont_bucle = 0
+            while(cont_bucle<4):
+                noFacturados.remove(noFacturados[0])
+                cont_bucle+=1
+
+            noFacturados_final=[[],[],[]]
+            for i in noFacturados:
+                noFacturados_final[0].append(i.split(' ')[0])
+                noFacturados_final[1].append(i.split(' ')[1])
+                noFacturados_final[2].append(i.split(' ')[2])
+
+        except:
+            noFacturados_final=[]
+
+
+
+        return [facturados_final,noFacturados_final]
         
 #separar datos
 class LosLibertadores:
@@ -1186,15 +1243,15 @@ class ElPacifico:
             lista.append(i.text)
         return lista
 
-auto = Vehiculo('PHSS63')
+auto = Vehiculo('HKTW30')
 
 # Para obtener Registro de Transporte Publico
 # auto.setRegistroTransportePublico(TransportePublico(auto.getPatente()).resultado())
 # auto.getRegistroTransportePublico()
 
 # Para obtener Revision Tecnica
-auto.setRegistroRevisionTecnica(RevisionTecnica(auto.getPatente(),"2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx').resultado())
-auto.getRegistroRevisionTecnica()
+#auto.setRegistroRevisionTecnica(RevisionTecnica(auto.getPatente(),"2a2b5480b431e8976a70ebbf3d38f550",'http://www.prt.cl/Paginas/RevisionTecnica.aspx').resultado())
+#auto.getRegistroRevisionTecnica()
 
 #auto.setInfraccionesViasExclusivas(ViasExclusivas(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesViasExclusivas()
@@ -1208,8 +1265,8 @@ auto.getRegistroRevisionTecnica()
 #auto.setInfraccionesElPacifico(ElPacifico(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesElPacifico()
 
-#auto.setInfraccionesRutaMaipo(RutaMaipo(auto.getPatente()).getInfracciones())
-#print(auto.getInfraccionesRutaMaipo())
+auto.setInfraccionesRutaMaipo(RutaMaipo(auto.getPatente()).getInfracciones())
+auto.getInfraccionesRutaMaipo()
 
 
 
