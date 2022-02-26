@@ -441,7 +441,6 @@ class TransportePublico:
         except:
             return []
 
-#ordenar los datos
 class RevisionTecnica:
     def __init__(self, patenteVehiculo, API_KEY, page_url):
         self.__patenteVehiculo = patenteVehiculo
@@ -492,41 +491,43 @@ class RevisionTecnica:
             'ctl00$ContentPlaceHolder1$MyAccordion_AccordionExtender_ClientState': '0'
         }
 
-        response = requests.post('http://www.prt.cl/Paginas/RevisionTecnica.aspx', headers=headers, data=data, verify=False)
+        try:
+            response = requests.post('http://www.prt.cl/Paginas/RevisionTecnica.aspx', headers=headers, data=data, verify=False)
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        datoVehiculos = []
-        infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado= [],[],[],[],[],[]
-        infoVehiculo = soup.find_all('span', id='ContentPlaceHolder1_lblDatosVehiculo')
-        infoRevision = soup.find_all('span', id='ContentPlaceHolder1_lblHistorico')
+            soup = BeautifulSoup(response.text, 'html.parser')
+            datoVehiculos = []
+            infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado= [],[],[],[],[],[]
+            infoVehiculo = soup.find_all('span', id='ContentPlaceHolder1_lblDatosVehiculo')
+            infoRevision = soup.find_all('span', id='ContentPlaceHolder1_lblHistorico')
 
-        for i in infoVehiculo:
-            for z in i.find_all('span'):
+            for i in infoVehiculo:
+                for z in i.find_all('span'):
 
-                if('Nota :' not in z.text):
-                    datoVehiculos.append(z.text)
+                    if('Nota :' not in z.text):
+                        datoVehiculos.append(z.text)
 
-        for i in infoRevision:
-            for z in i.find_all('td')[0::6]:
-                infoRevision_Fecha.append(z.text)
+            for i in infoRevision:
+                for z in i.find_all('td')[0::6]:
+                    infoRevision_Fecha.append(z.text)
 
-            for z in i.find_all('td')[1::6]:
-                infoRevision_CodPlanta.append(z.text)
+                for z in i.find_all('td')[1::6]:
+                    infoRevision_CodPlanta.append(z.text)
 
-            for z in i.find_all('td')[2::6]:
-                infoRevision_Planta.append(z.text)
+                for z in i.find_all('td')[2::6]:
+                    infoRevision_Planta.append(z.text)
 
-            for z in i.find_all('td')[3::6]:
-                infoRevision_NroCertificado.append(z.text.split('(g)')[0])
+                for z in i.find_all('td')[3::6]:
+                    infoRevision_NroCertificado.append(z.text.split('(g)')[0])
 
-            for z in i.find_all('td')[4::6]:
-                infoRevision_FechaVec.append(z.text)
+                for z in i.find_all('td')[4::6]:
+                    infoRevision_FechaVec.append(z.text)
 
-            for z in i.find_all('td')[5::6]:
-                infoRevision_Estado.append(z.text)
+                for z in i.find_all('td')[5::6]:
+                    infoRevision_Estado.append(z.text)
 
-        return [datoVehiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado]
-
+            return [datoVehiculos, infoRevision_Fecha, infoRevision_CodPlanta,infoRevision_Planta,infoRevision_NroCertificado,infoRevision_FechaVec, infoRevision_Estado]
+        except:
+            return [[],[],[],[],[],[],[]]
 #no se entiende lo que retorna
 class EncargoRobo:
     def __init__(self, patenteVehiculo, API_KEY, page_url):
@@ -1125,7 +1126,6 @@ class RutaMaipo:
         except:
             return [[],[]]
         
-
 #separar datos
 class LosLibertadores:
     def __init__(self, patenteVehiculo):
