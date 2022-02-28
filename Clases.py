@@ -319,8 +319,6 @@ class Vehiculo:
 
                 indice+=1
 
-
-
     def setInfraccionesDelSol(self, infraccionesDelSol):
         self.__infracciones_del_sol = infraccionesDelSol
 
@@ -360,8 +358,35 @@ class Vehiculo:
         self.__infracciones_los_libertadores = infraccionesLosLibertadores
 
     def getInfraccionesElPacifico(self):
-        print(self.__infracciones_el_pacifico)
-        return self.__infracciones_el_pacifico
+        infracciones_del_pacifico = self.__infracciones_el_pacifico
+
+        if(infracciones_del_pacifico==[]):
+            print('El vehiculo de patente ', self.__patente, 'no registra infracciones en "El Pacífico"')
+
+        else:
+            print('\nInfracciones El Pacífico:\n')
+
+            indice = 0
+            for i in infracciones_del_pacifico[0]:
+                print('\nInfraccion ', indice+1, ':')
+                print('Transito sin Tag Ruta: ', i[0])
+                print('Patente: ', i[1])
+                print('Vence: ', i[2])
+                print('Total: ', i[3], '\n')
+                
+                print('\nDetalle: ')
+                for k in infracciones_del_pacifico[1][indice]:
+
+                    
+                    print('\nPatente: ', k[0])
+                    print('Nombre Concesionaria: ', k[1])
+                    print('Hora de tránsito: ', k[2])
+                    print('Fecha de tránsito: ', k[3])
+                    print('Glosa Portico: ', k[4])
+                    print('Fecha de Vencimiento: ', k[5])
+                    print('Deuda: ', k[6],'\n')
+
+                indice+=1
 
     def setInfraccionesElPacifico(self, infraccionesElPacifico):
         self.__infracciones_el_pacifico = infraccionesElPacifico
@@ -1112,7 +1137,6 @@ class LampaSantiago:
             print(data)
         return data
 
-#separar datos
 class DelSol:
     def __init__(self, patenteVehiculo):
         self.__patenteVehiculo = patenteVehiculo
@@ -1366,10 +1390,111 @@ class ElPacifico:
         driver.find_element_by_xpath('/html/body/app-root/app-inicia-flujo-on-line/div[1]/div[4]/div[1]/div[2]/label/span').click()
         cajaDeuda = driver.find_elements_by_xpath(
             '/html/body/app-root/app-inicia-flujo-on-line/div[1]/div[4]/div[2]/div')
-        lista=[]
+        info=''
         for i in cajaDeuda:
-            lista.append(i.text)
-        return lista
+            info = info+i.text
+
+        driver.close()
+
+        if('No existen' in info):
+            return []
+
+        else:
+
+            string1_new = info.split('\n')
+            array = []
+            aux_array = []
+            for i in string1_new:
+                if('Transito sin Tag' in i):
+                    array.append(aux_array)
+                    aux_array = []
+                    aux_array.append(i)
+                else:
+                    aux_array.append(i)
+
+            array.append(aux_array)
+            array.remove(array[0])
+            
+            indice = 0
+            array_datos = []
+            aux_array_datos = []
+            array_detalles = []
+            aux_array_detalles = []
+            aux_array_detalles_2 = []
+
+            for i in array:
+                while(indice<5):
+                    aux_array_datos.append(i[indice])
+                    indice+=1
+
+                array_datos.append(aux_array_datos)
+                aux_array_datos = []
+
+                while(True):
+                    try:
+                        aux_array_detalles.append(i[indice])
+                        indice+=1
+                    except:
+                        indice=0
+                        array_detalles.append(aux_array_detalles)
+                        aux_array_detalles = []
+                        break
+
+            for i in array_datos:
+                len_array_datos = len(array_datos)
+
+                for j in range(0, len_array_datos):
+                    if('Transito' in i[j]):
+                        i[j] = (i[j].split('Ruta')[1]).strip()
+
+                    if('Vence' in i[j]):
+                        i.pop(j)
+                        len_array_datos-=1
+
+            for i in array_detalles:
+                len_array_i = len(i)
+
+                for j in range(0, len_array_i):
+                    try:
+                        k = i[j].split(':', 1)[1]
+                    except:
+                        k = i[j]
+
+                    if(':' in k):
+                        k = k.split(' ')
+
+                    if(len(k)==2 and not('-' in k)):
+                        aux_array_detalles.append(k[1])
+                        aux_array_detalles.append(k[0])
+                    else:
+                        aux_array_detalles.append(k)
+
+                aux_array_detalles_2.append(aux_array_detalles)
+                aux_array_detalles = []
+
+            array_detalles_final = []
+
+            for i in aux_array_detalles_2:
+                array_i = []
+                aux_array_i = []
+
+                for j in i:
+                    if(j==self.__patenteVehiculo):
+                        array_i.append(aux_array_i)
+                        aux_array_i = []
+                        aux_array_i.append(j) 
+                    
+                    else:
+                        aux_array_i.append(j)
+
+                array_i.append(aux_array_i)
+                array_i.remove(array_i[0])
+                array_detalles_final.append(array_i)
+
+            print(array_datos)
+            print(array_detalles_final)
+
+            return [array_datos, array_detalles_final]
 
 for i in lista_patentes:
     print('\nPatente: ',i,'\n')
@@ -1390,11 +1515,8 @@ for i in lista_patentes:
 #auto.setInfraccionesLampaSantiago(LampaSantiago(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesLampaSantiago()
 
-    auto.setInfraccionesDelSol(DelSol(auto.getPatente()).getInfracciones())
-    auto.getInfraccionesDelSol()
-
-#auto.setInfraccionesElPacifico(ElPacifico(auto.getPatente()).getInfracciones())
-#auto.getInfraccionesElPacifico()
+    auto.setInfraccionesElPacifico(ElPacifico(auto.getPatente()).getInfracciones())
+    auto.getInfraccionesElPacifico()
 
 # Encargo_Robo1 = EncargoRobo(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
 # a,b,c = Encargo_Robo1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
