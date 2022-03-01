@@ -4,7 +4,7 @@
 
 1. Transporte Publico ✓ 
 2. Revision Tecnica ✓
-3. Encargo Robo ?  
+3. Encargo Robo ✓ 
 4. Vehiculos Rematados ×
 5. Multas no Pagadas ×
 6. Vespucio Norte ✓ 

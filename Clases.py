@@ -646,7 +646,6 @@ class RevisionTecnica:
         except:
             return [[],[],[],[],[],[],[]]
 
-#no se entiende lo que retorna
 class EncargoRobo:
     def __init__(self, patenteVehiculo, API_KEY, page_url):
         self.__patenteVehiculo = patenteVehiculo
@@ -1189,8 +1188,9 @@ class ViasExclusivas:
 
 #no lleva a una parte para poner patente
 class LampaSantiago:
-    def __init__(self, patenteVehiculo):
+    def __init__(self, patenteVehiculo, dv):
         self.__patenteVehiculo = patenteVehiculo
+        self.__dv = dv
 
     def getInfracciones(self):
         driver = webdriver.Chrome()
@@ -1200,7 +1200,7 @@ class LampaSantiago:
         img= idf.get_attribute('src')
         result=Functions().Solver(img,'lampa_santiago')
         driver.find_element_by_xpath('//*[@id="solicitar_contrasena_plate"]').send_keys(self.__patenteVehiculo)
-        driver.find_element_by_xpath('//*[@id="solicitar_contrasena_plate_dv"]').send_keys(dv)
+        driver.find_element_by_xpath('//*[@id="solicitar_contrasena_plate_dv"]').send_keys(self.__dv)
         driver.find_element_by_xpath('//*[@id="captcha"]').send_keys(result)
         driver.find_element_by_xpath('//*[@id="transitos_sin_sesion_form"]/div[3]/div/button').click()
         table=driver.find_element_by_xpath('/html/body/div/div[3]').text
@@ -1692,7 +1692,4 @@ auto.getRegistroEncargoRobo()
 #auto.setInfraccionesLampaSantiago(LampaSantiago(auto.getPatente()).getInfracciones())
 #auto.getInfraccionesLampaSantiago()
 
-# Encargo_Robo1 = EncargoRobo(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
-# a,b,c = Encargo_Robo1.resultado("2a2b5480b431e8976a70ebbf3d38f550",'https://www.autoseguro.gob.cl')
-# print(a,b,c)
 
