@@ -13,7 +13,7 @@
 9. Costanera Norte ✓ 
 10. Nororiente ✓ 
 11. Vias Exclusivas ✓ 
-12. Lampa Santiago ? 
+12. Lampa Santiago ✓ 
 13. Del Sol (Ruta 78) ✓  
 14. Ruta Maipo ✓
 15. Los Libertadores (Ruta 57) ✓ 
