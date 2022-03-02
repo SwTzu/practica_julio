@@ -4,7 +4,7 @@
 
 1. Transporte Publico ✓ 
 2. Revision Tecnica ✓
-3. Encargo Robo ?  
+3. Encargo Robo ✓ 
 4. Vehiculos Rematados ×
 5. Multas no Pagadas ×
 6. Vespucio Norte ✓ 
@@ -13,7 +13,7 @@
 9. Costanera Norte ✓ 
 10. Nororiente ✓ 
 11. Vias Exclusivas ✓ 
-12. Lampa Santiago ? 
+12. Lampa Santiago ✓ 
 13. Del Sol (Ruta 78) ✓  
 14. Ruta Maipo ✓
 15. Los Libertadores (Ruta 57) ✓ 
