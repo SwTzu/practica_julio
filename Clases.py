@@ -143,22 +143,6 @@ class Functions():
         except:
             return False
 
-def getDriverNororiente(name_path: str = 'chromedriver.exe', options: None = None, verbose: int = 0, debug: bool = False):
-    try:
-        chrome_path = os.path.dirname(__file__) + f'./{name_path}'
-        if verbose == 0:
-            driver = webdriver.Chrome(executable_path=chrome_path)
-        elif verbose == 1:
-            driver = webdriver.Chrome(
-                executable_path=chrome_path, options=options)
-    except:
-        chrome_path = os.path.abspath('./f{name_path}')
-        if verbose == 0:
-            driver = webdriver.Chrome(executable_path=chrome_path)
-        elif verbose == 1:
-            driver = webdriver.Chrome(
-                executable_path=chrome_path, options=options)
-    return driver
 
 class Vehiculo:
     def __init__ (self, patente):
@@ -166,6 +150,8 @@ class Vehiculo:
         self.__registro_transporte_publico = []
         self.__registro_revision_tecnica = []
         self.__registro_encargo_robo = []
+        self.__vehiculosRematados = []
+        self.__multasNoPagadas = []
         self.__infracciones_vespucio_norte = []
         self.__infracciones_vespucio_sur = []
         self.__infracciones_autopase = []
@@ -246,7 +232,14 @@ class Vehiculo:
 
     def setRegistroRevisionTecnica(self, registroRevisionTecnica):
         self.__registro_revision_tecnica = registroRevisionTecnica
-    
+
+    def getVehiculosRematados(self):
+        remate=self.__vehiculosRematados
+        print(remate)
+
+    def setVehiculosRematados(self, vehiculosRematados):
+        self.__vehiculosRematados = vehiculosRematados
+
     def getRegistroEncargoRobo(self):
 
         encargo = self.__registro_encargo_robo
@@ -266,6 +259,20 @@ class Vehiculo:
 
     def setRegistroEncargoRobo(self, registroEncargoRobo):
         self.__registro_encargo_robo = registroEncargoRobo
+
+    def getMultasNoPagadas(self):
+            
+            multas = self.__multasNoPagadas
+            if multas!=[]:
+                print('\nMultas no pagadas: \n')
+                aux=[multas[i:i + 2] for i in range(0, len(multas), 2)]
+                for i in aux:
+                    i[1]=i[1].replace('               ','')
+                    print(f'Juzgado Policía Local: {i[0]}\n\tRol Causa: {i[1]}')
+            return self.__multasNoPagadas
+
+    def setMultasNoPagadas(self, multasNoPagadas):
+        self.__multasNoPagadas = multasNoPagadas
 
     def getInfraccionesVespucioNorte(self):
 
@@ -841,9 +848,92 @@ class EncargoRobo:
             #driver.close()
         return [informacion, estado]
 
-#Falta Vehiculos Rematados
+class Vehiculos_rematados:
+    def __init__(self,  API_KEY, APIKEY_2CAPTCHA, patente, page):
+        self.API_KEY = API_KEY
+        self.APIKEY_2CAPTCHA = APIKEY_2CAPTCHA
+        self.patente = patente
+        self.page = page
 
-#Falta Multas no Pagadas
+    def resultado(self):
+        sitekey='6Lc03YYUAAAAAL0m-kzq5mX0LuAXU9qIYl5cZITc'
+        numeros=int(''.join(filter(str.isdigit, self.patente)))
+        letras = (self.patente.strip(str(numeros)))
+        api_key = os.getenv(self.APIKEY_2CAPTCHA, self.API_KEY)
+        solver = TwoCaptcha(api_key)
+        options = webdriver.ChromeOptions()
+        # options.add_argument('--proxy-server=%s' % PROXY[0])
+        options.add_argument('--ignore-certificate-errors')
+        options.add_argument("--lang=es")
+        driver = webdriver.Chrome()
+        driver.get(self.page)
+        driver.find_element_by_xpath('//*[@id="masterContenido_txtLetras"]').send_keys(letras)
+        driver.find_element_by_xpath('//*[@id="masterContenido_txtNumeros"]').send_keys(numeros)
+        try:
+            result = solver.recaptcha(sitekey=sitekey,url=driver.current_url)
+        except:
+            print('error')
+        else:
+            result=str(result.get('code'))
+        driver.find_element_by_xpath('//*[@id="masterContenido_chkCondiciones"]').click()
+        driver.find_element_by_xpath('//*[@id="masterContenido_btnLnkConsultar"]').click()
+        soup=BeautifulSoup(driver.page_source,'html.parser')
+        #print(driver.page_source, file=open('4rematados.html','w'))
+        table = driver.find_elements_by_xpath('/html/body/div[2]/div/div/div/main/section/form/div[3]/div/div/table/tbody/tr/td/div/table[3]/tbody')
+        a = []
+        for i in table:
+            a.append(i.text)
+
+        return a
+
+class Multas_No_Pagadas:
+    def __init__(self, patente, API_KEY):
+        self.patente = patente
+        self.API_KEY = API_KEY
+
+    def Solver(self,driver):
+        page_url='http://consultamultas.srcei.cl/ConsultaMultas/buscarConsultaMultasExterna.do'
+        sitekey = '6Ld_vfsSAAAAAGbw9u9u1V2x8pqV_3Y5AS4h9mW1'
+        u1 = f"https://2captcha.com/in.php?key={self.API_KEY}&method=userrecaptcha&googlekey={sitekey}&pageurl={page_url}&json=1"
+        r1 = requests.get(u1)
+        rid = r1.json().get("request")
+        u2 = f"https://2captcha.com/res.php?key={self.API_KEY}&action=get&id={int(rid)}&json=1"
+        time.sleep(5)
+        while True:
+            r2 = requests.get(u2)
+            if r2.json().get("status") == 1:
+                form_tokon = r2.json().get("request")
+                break
+            time.sleep(5)
+        wirte_tokon_js = f'document.getElementById("g-recaptcha-response").innerHTML="{form_tokon}";'
+        driver.execute_script(wirte_tokon_js)
+        time.sleep(3)
+
+    def resultado(self):
+        x= 'http://consultamultas.srcei.cl/ConsultaMultas/consultaMultasExterna.do'
+        driver=webdriver.Chrome()
+        driver.get(x)
+        time.sleep(1)
+        driver.find_element_by_xpath('/html/body/table[1]/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/form/table/tbody/tr[7]/td[2]/span/input').send_keys(self.patente)
+        self.Solver(driver)
+        driver.find_element_by_xpath('/html/body/table[1]/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/form/table/tbody/tr[8]/td/table/tbody/tr[2]/td/a').click()
+        multasNoPagadas=[]
+        cont=0
+        try:
+            soup=BeautifulSoup(driver.page_source,'html.parser')
+            for i in soup.find_all("table",class_="grilla"):
+                for j in i.find_all("td"):
+                    if cont==0:
+                        multasNoPagadas.append(j.text)
+                        #print(j.text)
+                cont+=1
+
+                
+        except:
+            pass
+
+
+        return multasNoPagadas
 
 class VespucioNorte:
     def __init__(self, patenteVehiculo):
@@ -1226,7 +1316,7 @@ class Nororiente:
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--lang=es")
-        driver = getDriverNororiente(name_path='chromedriver.exe', options=options, verbose=1, debug=True)
+        driver = webdriver.Chrome(options=options)
         driver.get('https://www.costaneranorte.cl/LoginNoFrecuente.html')
         driver.find_element_by_xpath('//*[@id="PATENTE"]').send_keys(self.__patenteVehiculo)
         driver.find_element_by_xpath('/html/body/div/section/div/div[2]/form/a').click()
@@ -1277,7 +1367,6 @@ class Nororiente:
                     importes_a_pagar.append(importe_a_pagar.text)
 
         return [convenios, documentos, deudas_vencidas, deudas_por_vencer, total_deudas, importes_a_pagar]            
-
 class ViasExclusivas:
     def __init__(self, patenteVehiculo):
         self.__patenteVehiculo = patenteVehiculo
@@ -1855,7 +1944,6 @@ while(True):
         else:
             print('Error al ingresar la patente y/o el dígito verificador\nVuelva a intentarlo\n\n')
 
-print('Saliste del while :)')
 
 
 
@@ -1873,6 +1961,3 @@ print('Saliste del while :)')
 
 # auto.setInfraccionesLampaSantiago(LampaSantiago(auto.getPatente(), '2').getInfracciones())
 # auto.getInfraccionesLampaSantiago()
-
-
-
