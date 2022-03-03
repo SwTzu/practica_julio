@@ -5,7 +5,7 @@ from selenium import webdriver
 from twocaptcha import TwoCaptcha
 
 #lista_patentes=['CKFL14', 'KXPS43', 'PHSS63', 'XF7651', 'JLWF50', 'CZCX24', 'TC2442', 'CPLH89', 'LTZ011', 'HWLF62', 'CBKV63', 'LYCH67', 'HKTW30', 'DFBG70', 'BI0875', 'LDY042', 'FTD049', 'WF5936', 'CFSC19', 'HPKP41', 'VE7020', 'BWDR40', 'BFDL17', 'PS7532', 'BXDY16', 'BBRL36', 'BPRV37', 'ZW9270', 'YH8274', 'DSBX73', 'SD4437', 'VD5486', 'TJ2248', 'ZD4101', 'GPR092', 'LFB012', 'YW4448', 'FP7732', 'DJLR32', 'SV7591', 'LG7679', 'KSWB78', 'HHYW27', 'WL0100', 'GYD099', 'KK8693', 'JPYK29', 'KXPP51', 'GLKD79', 'UY6416', 'ED6761', 'JFKK59', 'WG2532', 'KW7915', 'BGD021', 'FKRR71', 'JCBV97', 'JXD084', 'GY8298', 'KRLC41', 'YR0403', 'BWSR23', 'YG2586', 'XC4499', 'DYJP22', 'GTRR68', 'CGFY25', 'ZB7546', 'FXKK99', 'LRCW17', 'KJWK97', 'JPKS44', 'DHSL81', 'BHZK99', 'UE0649', 'FSHR31', 'LHGH69', 'LSXB75', 'HYJ025', 'GGCF74', 'PG5945', 'KGZB62', 'HRTB99', 'DHV013', 'GPF070', 'GCZK17', 'SU9716', 'CBYB72', 'CWWR43', 'LKDZ91', 'CKVS68', 'LV2755', 'GGGB47', 'EE8342', 'DZDZ48', 'HKP045', 'LR2813', 'JRRJ13', 'WB3923', 'DLX035', 'KFPR52', 'BD6139', 'LXPX30', 'DPF068', 'GGFZ69', 'CRLT12', 'CFVB55', 'JXBW26', 'HDJY17', 'JDYG86', 'FHRF34', 'BZKK47', 'KTCH36', 'KXJD90', 'KGT040', 'DJGH61', 'WK0220', 'LPJH14', 'CPTH49', 'WK0637', 'CCJC40', 'WK7854', 'FLSS16', 'WB3994', 'WW4000', 'SD2996', 'LLSX48', 'FDK014', 'HPDW71', 'KVLY79', 'HJHT22', 'FYJJ29', 'LCCY83', 'ZX1227', 'WL4499', 'DBVH42', 'JWVT67', 'WB7258', 'DYCF71', 'NR0364', 'FBGG46', 'CVPP53', 'GXYT43', 'BVKH13', 'CYXZ34', 'KK8337', 'GDJK17', 'VR9229', 'NF2417', 'DX7389', 'FPLX76', 'RT2943', 'ZY4092', 'HKCB50', 'CGXZ27', 'VV9606', 'YT5012', 'XG5973', 'KGHX97', 'YV7398', 'FKGJ96', 'KKZJ39', 'DBTZ25', 'HKTV27', 'CCGH83', 'GYS092', 'UT8872', 'DDBD17', 'DSZG88', 'DBDK99', 'KTHV37', 'CPRK17', 'HTVT12', 'KS0852', 'CKGK80', 'QL0885', 'LS2484', 'KWSP28', 'JFKW46', 'WK9995', 'LLPX65', 'UN0384', 'DPJG58', 'LHDB85', 'LTPF27', 'KGH047', 'FDRG49', 'RW5289', 'BCR031', 'LSWW93', 'GSZB46', 'LTVJ41', 'BXJB48', 'HHSL37', 'JD0509', 'HYBP90', 'UG6239', 'BXSP64', 'PC6312', 'KT1046', 'BSTL76', 'KTPF65', 'CLZK25', 'KCPW61', 'RP8576', 'VZ6997', 'KLBJ58', 'WY4231', 'KH4878', 'DVGY65', 'LXBL35', 'BGS065', 'JXFL75', 'BYYL42', 'JCLL52', 'KZTS68', 'DZZX64', 'XF4131', 'FSKZ53', 'NE9952', 'JWTZ94', 'JYXJ49', 'YT2598', 'KRTG35', 'JKHV11', 'WZ5936', 'DXZZ71', 'FBTD79', 'ZY4313', 'JWGD90', 'JHTP61', 'XD1946', 'UH7384', 'LSTS13', 'CTWX77', 'FLBS46', 'LLZD13', 'JZTZ44', 'HJFT18', 'GBY078', 'TG5204', 'KTRY76', 'GCFH23', 'NC5093', 'WU9402', 'CTVF29', 'RR1601', 'GRZ045', 'KTDP50', 'DN5078', 'LFZ060', 'GWHP33', 'BCJP46', 'CJZZ41', 'SX5531', 'ZL3706', 'WE9030', 'CSJC87', 'HJZ073', 'OW0214', 'HWFL68', 'HFBF78', 'LHKW76', 'GXDX66', 'DJZJ56', 'TJ2673', 'WE9401', 'GN8893', 'VH8584', 'FVTT87', 'BFLH77', 'GZ7035', 'FLC060', 'LFRF19', 'DS9370', 'DD5495', 'JWSS57', 'XP0825', 'DPC062', 'JRW071', 'LS8370', 'LBGB61', 'NV3646', 'LVYZ15', 'FLGH58', 'HSW078', 'DYTF21', 'JHDW92', 'KKVG27', 'CSXS77', 'CLCP61', 'XF7794', 'BDF019', 'FXPX64', 'BSZW75', 'LB8361', 'KXGP72', 'PJ1416', 'KZJC56', 'AA3565', 'HRVP22', 'RR4674', 'DHLV93', 'MY6693', 'GFRD40', 'BSB024', 'FZTJ81', 'SP2634', 'LS4566', 'KJZR11', 'QR0929', 'CBKZ44', 'TD1370', 'VF4896', 'YA9953', 'IK0753', 'QP0935', 'BBZG92', 'XA7060', 'KJ4524', 'UF9103', 'FTLL26', 'FP8987', 'DX3050', 'KR0684', 'XJ1326', 'HCZX54', 'FJPV89', 'EC7118', 'KWVZ74', 'IB0282', 'HFVW64', 'NU3439', 'EP9151', 'JXGW98', 'BBLK74', 'LBPW42', 'DBLZ57', 'LN4084', 'JXYK14', 'LWBP37', 'OP0628', 'EL9722', 'LFHP14', 'KDW077', 'HLDS80', 'WH4542', 'JC0535', 'JKHW96', 'JLFK64', 'RE7838', 'PBDT23', 'UW3781', 'JXXT73', 'BXZP30', 'DPPJ10', 'JZRD97', 'BFGG68', 'YW1975', 'LPFW92', 'WZ4398', 'GHSW85', 'YP3098', 'KPJP44', 'QZ0357', 'WV7713', 'CCDV39', 'GWC067', 'VZ9141', 'VL0805', 'CSJR94', 'XL0398', 'CVSV95', 'NB4250', 'DGJX11', 'WN0756', 'VB8209', 'KTGR27', 'DTBP86', 'DHXB95', 'RB3899', 'DS3203', 'CLCJ66', 'DBTX65', 'XT0586', 'DXKR65', 'BHDK99', 'DS5662', 'FRLF55', 'SZ4763', 'BZSB71', 'FDPX24', 'GXDW96', 'FJVY60', 'HTRY57', 'RA9997', 'BGRY62', 'CTSX30', 'LRXY83', 'VJ5558', 'UE2005', 'HYYC59', 'BZZR24', 'ZL3357', 'KFKY18', 'FVBR57', 'UE7845', 'CBWL83', 'CHBJ12', 'BHBC32', 'BFWK67', 'LN8359', 'WR6936', 'CFBG91', 'LTTT95', 'LDVZ20', 'JCHB87', 'TN6728', 'VZ5287', 'KLYV97', 'DZ7000', 'OL0621', 'RY7521', 'BVVH25', 'FVGT37', 'NZ8785', 'HHBH58', 'JRLT56', 'BCDL51', 'YC9293', 'LWSR61', 'HGV013', 'KXYB57', 'CKHB27', 'LP5630', 'KSKV71', 'UE6124', 'ZV1824', 'RX8578', 'KFFW76', 'KWYX70', 'XB0551', 'BHVF75', 'PL9456', 'KHZ033', 'RD8080', 'YR6392', 'KRYZ47', 'DHJB96', 'UE6142', 'OZ0565', 'ZX2244', 'YK4774', 'LSBC98', 'LYRK53', 'KJSD73', 'JFDV41', 'GXSB39', 'SJ7800', 'WX1399', 'BM0775', 'GRZR56', 'GJHH78', 'FZCS14', 'HTVB43', 'KYTF30', 'NN6666', 'UN9815', 'FZCV44', 'KR4288', 'RN7396', 'KTJB19', 'XB4500', 'YJ4950', 'OA0176', 'FYSG49', 'ZJ7904', 'DXLY69', 'FSW075', 'DSLV58', 'BYJS56', 'KRLZ71', 'BDCW12', 'YG4109', 'DWRD44', 'JFHB24', 'FGXT80', 'DVVT95', 'GWD085', 'HKZJ63', 'BDGH13', 'FBJJ18', 'DYTL17', 'DCJB81', 'WE5891', 'BWXH65', 'DR2031', 'KV1759', 'BJB066', 'YA4780', 'BJK033', 'DDRD35', 'BXXV72', 'CFRW98', 'HYCS13', 'VR6058', 'FHPJ20', 'BYKB85', 'GTBD52', 'FPDV84', 'LFGP43', 'HPPT36', 'BRKW37', 'QJ0489', 'YR6149', 'ON0383', 'NW3360', 'TP8146', 'FGTK52', 'AA4647', 'ML0930', 'LDYF27', 'GRKX56', 'CPDB38', 'GWKD92', 'VP9596', 'XZ8634', 'GDC053', 'CLBH87', 'BLJB62', 'HXZL78', 'YX0424', 'DT9796', 'KWZ077', 'ZK9520', 'JGPZ32', 'HJFP92', 'XF3677', 'JDT053', 'DYCP92', 'YX1980', 'WL4063', 'RY3475', 'VX3632', 'KB1729', 'GLTD30', 'KF7964', 'HZFY24', 'DYXF86', 'XH6463', 'KGZH15', 'KC9784', 'BJZB79', 'KN8117', 'LVLB84', 'JPLZ84', 'FPRX43', 'HPR093', 'GHVF48', 'JDSC31', 'VV4408', 'FZR039', 'LDHC61', 'LTBP58', 'YC9378', 'VV9929', 'JJRK66', 'FSGC26', 'CJTD86', 'ID0474', 'KW2877', 'LTGC17', 'PCSY12', 'KTST75', 'SC8081', 'DFDR93', 'DVWR56', 'JRXB32', 'DR2286', 'KGHB37', 'ZU1801', 'FHPS67', 'LSGT12', 'VF2339', 'KDLB19', 'BBRC52', 'DSCG32', 'LBB040', 'KGHV88', 'YN4779', 'HCGR27', 'FKZL28', 'QS0114', 'BR5709', 'XS8512', 'GPZH23', 'BKGL33', 'GDV053', 'JSWG76', 'GXGW96', 'BDCX70', 'XX7043', 'YC1023', 'KSXH28', 'KHHR23', 'NP7231', 'KHBT75', 'WE8528', 'LXBY69', 'NS0501', 'FJWY92', 'LRWD25', 'FDDT51', 'GSSV42', 'JPDB82', 'HKSD23', 'HHHH64', 'SN8762', 'RL0316', 'WD2584', 'EU6960', 'CKKW95', 'GHF080', 'JCLJ79', 'DV8862', 'HDZK26', 'LLXR82', 'JYXP21', 'FBJY24', 'JSDF86', 'TK3201', 'LZDV47', 'BVFG17', 'PCDX60', 'CSYK20', 'HVXD27', 'WD4418', 'ZE3757', 'DWLB53', 'FCPX10', 'KZ2331', 'ZS0673', 'BDSV35', 'KSHW34', 'PW5248', 'LRBH58', 'HRFV90', 'MN0965', 'CZJR43', 'WL0943', 'CJXB92', 'JU0893', 'BZ5920', 'CSTW59', 'JLTW73', 'WF1749', 'MK0928', 'LFZT82', 'DU6266', 'FYCS46', 'FKSK45', 'HTJZ64', 'FSX091', 'LGWB40', 'DBC085', 'JDS050', 'IZ0334', 'TW6504', 'XU7011', 'JDKX64', 'KSDL27', 'DT1283', 'GPVK42', 'KHYY66', 'GJRZ47', 'LFFR76', 'YD6860', 'BSBZ43', 'JWYH45', 'ZF8502', 'CA4909', 'GXVV43']
-lista_patentes=['PHSS63']
+lista_patentes=['HKCB50']
 class Functions():
     def Solver(self,img,text):
         urllib.request.urlretrieve(img, f'captcha{text}.png')
@@ -14,22 +14,135 @@ class Functions():
         result=solver.normal(f'./captcha{text}.png')
         return result.get('code')
 
-def getDriverNororiente(name_path: str = 'chromedriver.exe', options: None = None, verbose: int = 0, debug: bool = False):
-    try:
-        chrome_path = os.path.dirname(__file__) + f'./{name_path}'
-        if verbose == 0:
-            driver = webdriver.Chrome(executable_path=chrome_path)
-        elif verbose == 1:
-            driver = webdriver.Chrome(
-                executable_path=chrome_path, options=options)
-    except:
-        chrome_path = os.path.abspath('./f{name_path}')
-        if verbose == 0:
-            driver = webdriver.Chrome(executable_path=chrome_path)
-        elif verbose == 1:
-            driver = webdriver.Chrome(
-                executable_path=chrome_path, options=options)
-    return driver
+    def dvFormatoAA1000(patente_ingresada, digito_verificador_ingresado):
+
+        try:
+            caracteres = list(patente_ingresada)
+            patente_letras = caracteres[0]+caracteres[1]
+            patente_numeros = caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]
+            digitos_letras = ''
+            digito_verificador = ''
+
+            tabla_digitos = ['AA 001', 'BA 002', 'CA 003','EA 004', 'FA 005', 'GA 006','HA 007', 'AB 008', 'CB 009','EB 010', 'FB 011', 'GB 012','HB 013', 'AC 014', 'BC 015','EC 016', 'FC 017', 'GC 018','HC 019', 'BD 020', 'ED 021','FD 022', 'GD 023', 'HD 024','AE 025', 'BE 026', 'CE 027','EE 028', 'FE 029', 'GE 030','HE 031', 'AF 032', 'BF 033','CF 034', 'EF 035', 'FF 036','GF 037', 'HF 038', 'AG 039','BG 040', 'CG 041', 'EG 042','FG 043', 'HG 044', 'AH 045','BH 046', 'CH 047', 'EH 048','FH 049', 'GH 050', 'HH 051','AJ 052', 'BJ 053', 'CJ 054','EJ 055', 'FJ 056', 'GJ 057','HJ 058', 'BK 059', 'CK 060','EK 061', 'FK 062', 'GK 063','HK 064', 'AL 065', 'BL 066','CL 067', 'EL 068', 'FL 069','GL 070', 'HL 071', 'AN 072','BN 073', 'CN 074', 'EN 075','FN 076', 'GN 077', 'HN 078','AP 079', 'BP 080', 'CP 081','EP 082', 'FP 083', 'GP 084','HP 085', 'AR 086', 'BR 087','CR 088', 'ER 089', 'FR 090','GR 091', 'HR 092', 'AS 093','BS 094', 'CS 095', 'ES 096','FS 097', 'GS 098', 'HS 099',
+                    'AT 100', 'BT 101', 'CT 102','ET 103', 'FT 104', 'GT 105','HT 106', 'AU 107', 'BU 108','CU 109', 'EU 110', 'FU 111','GU 112', 'HU 113', 'AV 114','BV 115', 'CV 116', 'EV 117','FV 118', 'GV 119', 'HV 120','AX 121', 'BX 122', 'CX 123','EX 124', 'FX 125', 'GX 126','HX 127', 'BY 128', 'CY 129','EY 130', 'FY 131', 'GY 132','HY 133', 'AZ 134', 'BZ 135','CZ 136', 'EZ 137', 'FZ 138','GZ 139', 'DA 140', 'DB 141','DD 142', 'DE 143', 'DF 144','DG 145', 'DH 146', 'DI 147','DJ 148', 'DK 149', 'DL 150','DN 151', 'DP 152', 'DR 153','DS 154', 'DT 155', 'DU 156','DV 157', 'DX 158', 'DY 159','DZ 160', 'KA 161', 'KB 162','KC 163', 'KD 164', 'KE 165','KF 166', 'KG 167', 'KH 168','KJ 169', 'KK 170', 'KL 171','KN 172', 'KP 173', 'KR 174','KS 175', 'KT 176', 'KU 177','KV 178', 'KX 179', 'KY 180','KZ 181', 'LA 182', 'LB 183','LC 184', 'LD 185', 'LE 186','LF 187', 'LG 188', 'LH 189','LJ 190', 'LK 191', 'LL 192','LN 193', 'LP 194', 'LR 195','LS 196', 'LT 197', 'LU 198','LV 199', 'LX 200', 'LY 201',
+                    'LZ 202', 'NA 203', 'NB 204','NC 205', 'ND 206', 'NE 207','NF 208', 'NG 209', 'NH 210','NJ 211', 'NK 212', 'NL 213','NN 214', 'NP 215', 'NR 216','NS 217', 'NT 218', 'NU 219','NV 220', 'NY 221', 'NZ 222','PA 223', 'PB 224', 'PC 225','PD 226', 'PE 227', 'PF 228','PG 229', 'PH 230', 'PJ 231','PK 232', 'PL 233', 'PN 234','PP 235', 'PS 236', 'PT 237','PU 238', 'PV 239', 'PX 240','PY 241', 'PZ 242', 'NX 243','RA 244', 'RB 245', 'RC 246','RD 247', 'RE 248', 'RF 249','RG 250', 'RH 251', 'RJ 252','RK 253', 'RL 254', 'RN 255','RP 256', 'RR 257', 'RS 258','RT 259', 'RU 260', 'RV 261','RX 262', 'RY 263', 'RZ 264','HZ 265', 'SA 266', 'SB 267','SC 268', 'SD 269', 'SE 270','SF 271', 'SG 272', 'SH 273','SJ 274', 'SK 275', 'SL 276','SN 277', 'SP 278', 'SR 279','SS 280', 'ST 281', 'SU 282','SV 283', 'SX 284', 'SY 285','SZ 286', 'TA 287', 'TB 288','TC 289', 'TD 290', 'TE 291','TF 292', 'TG 293', 'TH 294','TJ 295', 'TK 296', 'TL 297','TN 298', 'TP 299', 'TR 300',
+                    'TS 301', 'TT 302', 'TU 303','TV 304', 'TX 305', 'TY 306','TZ 307', 'UA 308', 'UB 309','UC 310', 'UD 311', 'UE 312','UF 313', 'UG 314', 'UH 315','UJ 316', 'UK 317', 'UL 318','UN 319', 'UP 320', 'UR 321','US 322', 'UT 323', 'UU 324','UV 325', 'UX 326', 'UY 327','UZ 328', 'VA 329', 'VB 330','VC 331', 'VD 332', 'VE 333','VF 334', 'VG 335', 'VH 336','VJ 337', 'VK 338', 'VL 339','VN 340', 'VP 341', 'VR 342','VS 343', 'VT 344', 'VU 345','VV 346', 'VX 347', 'VY 348','VZ 349', 'XA 350', 'XB 351','XC 352', 'XD 353', 'XE 354','XF 355', 'XG 356', 'XH 357','XJ 358', 'XK 359', 'XL 360','XM 361', 'XN 362', 'XP 363','XQ 364', 'XR 365', 'XS 366','XT 367', 'XU 368', 'XV 369','XX 370', 'XY 371', 'XZ 372','YA 373', 'YB 374', 'JA 375','JB 376', 'JC 377', 'JD 378','JE 379', 'YC 380', 'YD 381','YE 382', 'YF 383', 'YG 384','YH 385', 'YJ 386', 'YK 387','YL 388', 'YN 389', 'YP 390','YR 391', 'YS 392', 'YT 393','YU 394', 'YV 395', 'YX 396','YY 397', 'YZ 398', 'ZA 399','ZB 400', 'ZC 401', 'ZD 402',
+                    'ZE 403', 'ZF 404', 'ZG 405','ZH 406', 'ZI 407', 'ZJ 408','ZK 409', 'ZL 410', 'JF 411','JG 412', 'JH 413', 'ZN 414','ZP 415', 'ZR 416', 'ZS 417','ZT 418', 'ZU 419', 'ZV 420','ZX 421', 'ZY 422', 'ZZ 423','WA 430', 'WB 431', 'WC 432','WD 433', 'WE 434', 'WF 435','WG 436', 'WH 437', 'WJ 438','WK 439', 'WL 440', 'WN 441','WP 442', 'WR 443', 'WS 444','WT 445', 'WU 446', 'JJ 447','JK 448', 'WV 449', 'WW 450','WX 451', 'WY 452', 'WZ 453','ZW 454', 'YW 455', 'XW 456','UW 457', 'TW 458', 'SW 459','RW 460', 'PW 461', 'NW 462','LW 463', 'KW 464', 'MZ 465','MY 466', 'MX 467', 'MV 468','MU 469', 'MT 470', 'MS 471','JL 424', 'JN 425', 'JO 426','JP 427', 'JR 428', 'JS 429','JT 472', 'JU 473', 'JV 474','JW 475', 'JX 476', 'JY 477','JZ 478', 'MA 479', 'MB 480','MC 481', 'MD 482', 'ME 483','MF 484', 'MG 485', 'MH 486','MJ 487', 'MK 488', 'ML 489','MN 490', 'MP 491', 'MR 492','IA 493', 'IB 494', 'IC 495','ID 496', 'IE 497', 'IF 498','IG 499', 'IH 500', 'IJ 501',
+                    'IK 502', 'IL 503', 'IN 504','IO 505', 'IP 506', 'IR 507','IS 508', 'IT 509', 'IU 510','IV 511', 'IW 512', 'IX 513','IY 514', 'IZ 515', 'QA 516','QB 517', 'QC 518', 'QD 519','QE 520', 'QF 521', 'QG 522','QH 523', 'QJ 524', 'QK 525','QL 526', 'QN 527', 'QO 528','QP 529', 'QR 530', 'QS 531','QT 532', 'QU 533', 'QV 534','QW 535', 'QX 536', 'QY 537','QZ 538', 'OA 539', 'OB 540','OC 541', 'OD 542', 'OE 543','OF 544', 'OG 545', 'OH 546','OJ 547', 'OK 548', 'OL 549','ON 550', 'OO 551', 'OP 552','OR 553', 'OS 554', 'OT 555','OU 556', 'OV 557', 'OW 558','OX 559', 'OY 560', 'OZ 561','AD 562', 'AI 563', 'AK 564','AM 565', 'AW 566', 'AY 567','BB 568', 'BI 569', 'BM 570','BO 571', 'BW 572', 'CC 573','CD 574', 'CI 575', 'CM 576','CO 577', 'CW 578', 'DC 579','DM 580', 'DO 581', 'DW 582']
+
+            for i in tabla_digitos:
+                if(i.split(' ')[0]==patente_letras):
+                    digitos_letras = i.split(' ')[1]
+
+            digitos = list(digitos_letras+patente_numeros)
+            suma = int(digitos[0])*2+int(digitos[1])*7+int(digitos[2])*6+int(digitos[3])*5+int(digitos[4])*4+int(digitos[5])*3+int(digitos[6])*2
+            resto_inicial = suma%11
+            resto_final = 11-resto_inicial
+
+            if(resto_final==11):
+                digito_verificador='0'
+            elif(resto_final==10):
+                digito_verificador='K'
+            else:
+                digito_verificador=str(resto_final)
+
+            if(str(digito_verificador)==digito_verificador_ingresado):
+                return True
+            
+            else:
+                return False
+
+        except:
+            return False
+
+    def dvNuevoFormatoPPU(patente_ingresada, digito_verificador_ingresado):
+        
+        try:
+            caracteres = list(patente_ingresada)
+            patente_letras = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]
+            patente_numeros = caracteres[4]+caracteres[5]
+            numero_asignado_letras = ''
+            digito_verificador = ''
+
+            tabla_digitos = ['B 1','C 2','D 3','F 4','G 5','H 6','J 7','K 8','L 9','P 0','R 2','S 3','T 4','V 5','W 6','X 7','Y 8','Z 9']
+
+            for letra in patente_letras:
+                for digito in tabla_digitos:
+                    if(letra==digito.split(' ')[0]):
+                        numero_asignado_letras = numero_asignado_letras+digito.split(' ')[1]
+
+            digitos_aux = list(numero_asignado_letras+patente_numeros)
+            digitos = []
+            for i in digitos_aux:
+                digitos.append(int(i))
+
+            suma = digitos[0]*7+digitos[1]*6+digitos[2]*5+digitos[3]*4+digitos[4]*3+digitos[5]*2
+            resto = suma%11
+
+            if(resto==0):
+                digito_verificador='0'
+            else:
+                resto = 11-resto
+                if(resto==10):
+                    digito_verificador='K'
+                else:
+                    digito_verificador=str(resto)
+
+            print(digito_verificador)
+
+            if(digito_verificador==digito_verificador_ingresado):
+                return True
+            else:
+                return False
+
+        except:
+            return False
+
+    def dvNuevoFormatoPPUMotos(patente_ingresada, digito_verificador_ingresado):
+
+        try:
+            caracteres = list(patente_ingresada)
+            patente_letras = caracteres[0]+caracteres[1]+caracteres[2]
+            patente_numeros = caracteres[3]+caracteres[4]
+            numero_asignado_letras = ''
+            digito_verificador = ''
+
+            tabla_digitos = ['B 1','C 2','D 3','F 4','G 5','H 6','J 7','K 8','L 9','P 0','R 2','S 3','T 4','V 5','W 6','X 7','Y 8','Z 9']
+
+            for letra in patente_letras:
+                for digito in tabla_digitos:
+                    if(letra==digito.split(' ')[0]):
+                        numero_asignado_letras = numero_asignado_letras+digito.split(' ')[1]
+
+            digitos_aux = list(numero_asignado_letras+'0'+patente_numeros)
+            digitos = []
+            for i in digitos_aux:
+                digitos.append(int(i))
+
+            print(digitos)
+
+            suma = digitos[0]*7+digitos[1]*6+digitos[2]*5+digitos[3]*4+digitos[4]*3+digitos[5]*2
+            resto = suma%11
+
+            if(resto==0):
+                digito_verificador='0'
+            else:
+                resto = 11-resto
+                if(resto==10):
+                    digito_verificador='K'
+                else:
+                    digito_verificador=str(resto)
+
+            print(digito_verificador)
+
+            if(digito_verificador==digito_verificador_ingresado):
+                return True
+            else:
+                return False
+
+        except:
+            return False
+
 
 class Vehiculo:
     def __init__ (self, patente):
@@ -1203,7 +1316,7 @@ class Nororiente:
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--lang=es")
-        driver = getDriverNororiente(name_path='chromedriver.exe', options=options, verbose=1, debug=True)
+        driver = webdriver.Chrome(options=options)
         driver.get('https://www.costaneranorte.cl/LoginNoFrecuente.html')
         driver.find_element_by_xpath('//*[@id="PATENTE"]').send_keys(self.__patenteVehiculo)
         driver.find_element_by_xpath('/html/body/div/section/div/div[2]/form/a').click()
@@ -1254,7 +1367,6 @@ class Nororiente:
                     importes_a_pagar.append(importe_a_pagar.text)
 
         return [convenios, documentos, deudas_vencidas, deudas_por_vencer, total_deudas, importes_a_pagar]            
-
 class ViasExclusivas:
     def __init__(self, patenteVehiculo):
         self.__patenteVehiculo = patenteVehiculo
@@ -1791,16 +1903,49 @@ class ElPacifico:
 
             return [array_datos, array_detalles_final]
 
-for i in lista_patentes:
-    print('\nPatente: ',i,'\n')
-    auto = Vehiculo(i)
+while(True):
 
-    auto.setMultasNoPagadas(Multas_No_Pagadas(auto.getPatente(),"2a2b5480b431e8976a70ebbf3d38f550").resultado())
-    auto.getMultasNoPagadas()
+    patente = input('Ingrese patente: ')
+    patente_aux = list(patente)
+    dv = input('Ingrese dígito verificador: ')
+    cont_numeros = 0
+    condicion_continuar=False
 
-#Para obtener Vehiculos Rematados
-#auto.setVehiculosRematados(Vehiculos_rematados( "2a2b5480b431e8976a70ebbf3d38f550", "1abc234de56fab7c89012d34e56fa7b8", auto.getPatente(), 'https://www.aach.cl/conremate/').resultado())
-#auto.getVehiculosRematados()
+    if(len(patente_aux)==6):
+        for caracter in patente_aux:
+            try:
+                aux = int(caracter)
+                cont_numeros+=1
+            except:
+                pass
+
+        if(cont_numeros==4):
+            value = Functions.dvFormatoAA1000(patente, dv)
+            condicion_continuar = True
+
+        elif(cont_numeros==2):
+            value = Functions.dvNuevoFormatoPPU(patente, dv)
+            condicion_continuar = True
+        
+        else:
+            print('Error al ingresar la patente y/o el dígito verificador\nVuelva a intentarlo\n\n')
+
+    elif(len(patente_aux)==5):
+        value = Functions.dvNuevoFormatoPPUMotos(patente, dv)
+        condicion_continuar = True
+
+    else:
+        print('Error al ingresar la patente y/o el dígito verificador\nVuelva a intentarlo\n\n')
+
+    if(condicion_continuar==True):
+        if(value==True):
+            break
+
+        else:
+            print('Error al ingresar la patente y/o el dígito verificador\nVuelva a intentarlo\n\n')
+
+
+
 
 # Para obtener Registro de Transporte Publico
 # auto.setRegistroTransportePublico(TransportePublico(auto.getPatente()).resultado())
@@ -1814,8 +1959,5 @@ for i in lista_patentes:
 # auto.setRegistroEncargoRobo(EncargoRobo(auto.getPatente(), "2a2b5480b431e8976a70ebbf3d38f550", 'https://www.autoseguro.gob.cl').resultado())
 # auto.getRegistroEncargoRobo()
 
-#auto.setInfraccionesLampaSantiago(LampaSantiago(auto.getPatente(), '2').getInfracciones())
-#auto.getInfraccionesLampaSantiago()
-
-
-
+# auto.setInfraccionesLampaSantiago(LampaSantiago(auto.getPatente(), '2').getInfracciones())
+# auto.getInfraccionesLampaSantiago()
