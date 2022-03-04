@@ -1320,7 +1320,6 @@ class Nororiente:
         driver.get('https://www.costaneranorte.cl/LoginNoFrecuente.html')
         driver.find_element_by_xpath('//*[@id="PATENTE"]').send_keys(self.__patenteVehiculo)
         driver.find_element_by_xpath('/html/body/div/section/div/div[2]/form/a').click()
-        driver.find_element_by_xpath('/html/body/div/section/div/div[2]/form/p[2]/a').click()
         #print(str(driver.current_url))
         try:
             result=solver.recaptcha(sitekey=sitekey,
@@ -1330,7 +1329,7 @@ class Nororiente:
         else:
             result=str(result.get('code'))
         driver.execute_script(f'document.getElementById("g-recaptcha-response").innerHTML="{result}";')
-        driver.find_element_by_xpath('/html/body/div[1]/section/div/form/div[2]/a').click()
+        driver.find_element_by_xpath('/html/body/div[1]/section/div/div[2]/a').click()
         soup=BeautifulSoup(driver.page_source,'html.parser')
         table=soup.find_all('table', id='TablaConvenioDeuda')
         convenios, documentos, deudas_vencidas, deudas_por_vencer, total_deudas, importes_a_pagar = [],[],[],[],[],[]
@@ -1943,9 +1942,13 @@ while(True):
 
         else:
             print('Error al ingresar la patente y/o el dígito verificador\nVuelva a intentarlo\n\n')
+    
+#auto=Vehiculo(patente)
+#auto.setInfraccionesNororiente(Nororiente(auto.getPatente()).getInfracciones())
+#auto.getInfraccionesNororiente()
 
 
-
+    
 
 # Para obtener Registro de Transporte Publico
 # auto.setRegistroTransportePublico(TransportePublico(auto.getPatente()).resultado())
