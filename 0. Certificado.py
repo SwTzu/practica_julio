@@ -3,7 +3,9 @@ import time
 import os
 import random
 import requests
+import urllib
 from bs4 import BeautifulSoup
+from twocaptcha import TwoCaptcha
 # config = {"USER": "foo", "EMAIL": "foo@example.org"}
 #config = dotenv_values(".env")
 # print(config)
@@ -23,11 +25,11 @@ mail_usuario='ni.brevis@gmail.com'
 API_KEY = "2a2b5480b431e8976a70ebbf3d38f550"
 
 
-def Solver(driver,url):
+def Solver(url):
     #soup = BeautifulSoup(driver.page_source, 'html.parser') 
     #sitekey = str(soup.find('div', class_='g-recaptcha').get('data-sitekey'))
     
-    sitekey = '6LeZ6egUAAAAAGwL8CjkDE8dcSw2DtvuVpdwTkwG'
+    sitekey = '6Ld_vfsSAAAAAGbw9u9u1V2x8pqV_3Y5AS4h9mW1'
     u1 = f"https://2captcha.com/in.php?key={API_KEY}&method=userrecaptcha&googlekey={sitekey}&pageurl={url}&json=1&enterprise=1"
     r1 = requests.get(u1)
     #print(r1.json())
@@ -41,10 +43,8 @@ def Solver(driver,url):
             form_tokon = r2.json().get("request")
             break
         time.sleep(5+random.randint(1,3))
-    print("Captcha Solved")
-    wirte_tokon_js = f'document.getElementsByClassName("g-recaptcha-response").innerHTML="{form_tokon}";'
-    driver.execute_script(wirte_tokon_js)
-    time.sleep(3+random.randint(1,3))
+    #print("Captcha Solved")
+    return form_tokon
     #driver.execute_script('recaptchaCallback();')
     #time.sleep(1+random.randint(1,30)
 
@@ -71,22 +71,6 @@ def f7(seq):
     return [x for x in seq if not (x in seen or seen_add(x))]
 
 
-def get_driver(name_path: str = 'chromedriver.exe', options: None = None, verbose: int = 0, debug: bool = False):
-    try:
-        chrome_path = os.path.dirname(__file__) + f'./{name_path}'
-        if verbose == 0:
-            driver = webdriver.Chrome(executable_path=chrome_path)
-        elif verbose == 1:
-            driver = webdriver.Chrome(
-                executable_path=chrome_path, options=options)
-    except:
-        chrome_path = os.path.abspath('./f{name_path}')
-        if verbose == 0:
-            driver = webdriver.Chrome(executable_path=chrome_path)
-        elif verbose == 1:
-            driver = webdriver.Chrome(
-                executable_path=chrome_path, options=options)
-    return driver
 
 def certificado():
     options = webdriver.ChromeOptions()
@@ -94,8 +78,7 @@ def certificado():
     # options.add_argument('--proxy-server=%s' % PROXY[0])
     options.add_argument('--ignore-certificate-errors')
     options.add_argument("--lang=es")
-    driver = get_driver(name_path='chromedriver.exe',
-                        options=options, verbose=1, debug=True)
+    driver = webdriver.Chrome("./chromedriver", options=options)
 
     link1 = 'https://www.registrocivil.cl/OficinaInternet/web/carro.srcei'
     driver.get(link1)
@@ -110,6 +93,22 @@ def certificado():
         '/html/body/div/div[7]/div[1]/div[7]/div[2]/table/tbody/tr[1]/td[1]/div/ins').click()
     driver.find_element_by_xpath('//*[@id="idInputPPU_4_4_1"]').send_keys('GRYD37')
     driver.find_element_by_xpath('//*[@id="btn_agregarCarro_1#4_4_1#1"]').click()
+    while True:
+        try:
+            img=driver.find_element_by_css_selector('body > img:nth-child(2)').get_attribute('src')
+            break
+        except:
+            time.sleep(1)
+    print(img)
+    urllib.request.urlretrieve(img, 'captchacav.png')
+
+    api_key = os.getenv('1abc234de56fab7c89012d34e56fa7b8', '2a2b5480b431e8976a70ebbf3d38f550')
+    solver = TwoCaptcha(api_key)
+    result=solver.normal('./captchacav.png')
+    print(result)
+    #/html/body/img[1]
+    driver.find_element_by_xpath('/html/body/input').send_keys(result)
+    driver.find_element_by_xpath('/html/body/button').click()
     time.sleep(2+random.randint(1,3))
     driver.find_element_by_xpath(
         '//*[@id="carro_solicitanteInputEmail"]').send_keys(mail_usuario)
@@ -172,10 +171,11 @@ def certificado():
 
 '''
 
-while True:
-    try:
-        certificado()
-        #break
+"""while True:
+    try:"""
+print('Iniciando')
+certificado()
+"""        #break
     except:
         time.sleep(60+random.randint(1,3))
-        pass
+        pass"""
