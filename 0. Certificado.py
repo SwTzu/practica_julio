@@ -45,45 +45,18 @@ def Solver(url):
         time.sleep(5+random.randint(1,3))
     #print("Captcha Solved")
     return form_tokon
-    #driver.execute_script('recaptchaCallback();')
-    #time.sleep(1+random.randint(1,30)
-
-
-def getProxies():
-    r = requests.get('https://free-proxy-list.net/')
-    soup = BeautifulSoup(r.content, 'html.parser')
-    table = soup.find('tbody')
-    proxies = []
-    for row in table:
-        #print(row.find_all('td')[3].text)
-
-        if row.find_all('td')[3].text == 'Chile':
-            proxy = ':'.join([row.find_all('td')[0].text,row.find_all('td')[1].text])
-            proxies.append(proxy)
-        else:
-            pass
-    return proxies
-
-
-def f7(seq):
-    seen = set()
-    seen_add = seen.add
-    return [x for x in seq if not (x in seen or seen_add(x))]
-
 
 
 def certificado():
     options = webdriver.ChromeOptions()
 
     # options.add_argument('--proxy-server=%s' % PROXY[0])
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument("--lang=es")
-    driver = webdriver.Chrome("./chromedriver", options=options)
+    #options.add_argument('--ignore-certificate-errors')
+    #options.add_argument('--headless')
+    driver = webdriver.Chrome("./chromedriver.exe", options=options)
 
     link1 = 'https://www.registrocivil.cl/OficinaInternet/web/carro.srcei'
     driver.get(link1)
-    #print(driver.proxy)
-    # time.sleep(2+random.randint(1,3))
 
     time.sleep(2+random.randint(1,3))
     driver.find_element_by_xpath('//*[@id="title_0"]').click()
@@ -93,22 +66,20 @@ def certificado():
         '/html/body/div/div[7]/div[1]/div[7]/div[2]/table/tbody/tr[1]/td[1]/div/ins').click()
     driver.find_element_by_xpath('//*[@id="idInputPPU_4_4_1"]').send_keys('GRYD37')
     driver.find_element_by_xpath('//*[@id="btn_agregarCarro_1#4_4_1#1"]').click()
-    while True:
-        try:
-            img=driver.find_element_by_css_selector('body > img:nth-child(2)').get_attribute('src')
-            break
-        except:
-            time.sleep(1)
-    print(img)
+
+    driver.switch_to.frame(driver.find_element_by_id('cu_idIframe4'))
+    img=driver.find_element_by_xpath('html/body/img[1]').get_attribute('src')
+
+
     urllib.request.urlretrieve(img, 'captchacav.png')
 
     api_key = os.getenv('1abc234de56fab7c89012d34e56fa7b8', '2a2b5480b431e8976a70ebbf3d38f550')
     solver = TwoCaptcha(api_key)
     result=solver.normal('./captchacav.png')
-    print(result)
     #/html/body/img[1]
-    driver.find_element_by_xpath('/html/body/input').send_keys(result)
+    driver.find_element_by_xpath('/html/body/input').send_keys(result.get('code'))
     driver.find_element_by_xpath('/html/body/button').click()
+    driver.switch_to.default_content()
     time.sleep(2+random.randint(1,3))
     driver.find_element_by_xpath(
         '//*[@id="carro_solicitanteInputEmail"]').send_keys(mail_usuario)
@@ -144,15 +115,6 @@ def certificado():
     driver.find_element_by_xpath(
         '/html/body/div[1]/section[2]/div/div/form/div[3]/div[2]/button').click()
     time.sleep(1+random.randint(1,3))
-    '''
-    info=driver.find_elements_by_xpath("/html/head]")
-    print(info, 'aaa')
-    try:
-        print(info.text,"\nasdifubasiudbfaisubdfaiusbdfiuasbfiuabsdf")
-        Solver(driver,driver.current_url)
-    except:
-        print(info,"\nasdifubasiudbfaisubdfaiusbdfiuasbfiuabsdf")
-    '''
 
 
     time.sleep(2+random.randint(1,3))
@@ -163,19 +125,13 @@ def certificado():
     time.sleep(10+random.randint(1,3))
     driver.quit()
     # DESDE AQUI COMIENZA LA CONFIRMACION DEL PAGO
-'''
-    #pdb.set_trace()
-    driver.find_element_by_xpath('/html/body/div[2]/div/div/main/div[7]/div/button').click()
-    time.sleep(2+random.randint(1,3))
-    time.sleep(2+random.randint(1,3))
 
-'''
 
-"""while True:
-    try:"""
-print('Iniciando')
-certificado()
-"""        #break
+while True:
+    try:
+        print('Iniciando')
+        certificado()
+        #break
     except:
         time.sleep(60+random.randint(1,3))
-        pass"""
+        pass
